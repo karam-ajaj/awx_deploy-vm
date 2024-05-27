@@ -1,0 +1,36 @@
+- name: Create a VM from a template
+  hosts: localhost
+  connection: local
+  gather_facts: no
+  tasks:
+  - name: Clone the template
+    vmware_guest:
+      hostname: vcenter.FQDN
+      username: administrator@vsphere.local
+      password: password
+      validate_certs: False
+      name: test-ansible-deploy-vm
+      networks:
+        - name: "dummy vlan 4094"
+          ip: "10.10.10.10"
+          netmask: "255.255.255.0"
+          gateway: "10.10.10.1"
+      hardware:
+        memory_mb: 2048
+        num_cpus: 2
+      disk:
+        - datastore: datastore-name
+          size_gb: 40
+          type: "thin"
+      template: template-name
+      datacenter: datacenter-name
+      cluster: cluster-name
+      folder: folder-name/
+      state: poweredon
+      wait_for_ip_address: no
+      customization:
+        domain: domain.local
+        dns_servers:
+          - DNS_IP
+        dns_suffix:
+          - server.local
